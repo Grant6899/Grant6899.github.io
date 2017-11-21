@@ -593,4 +593,4 @@ vector<bool> v{ true, false };
 bool* p = &v[0];
 ```
 
-Solutions: use deque<bool> or bitset instead or bitset.
+Solutions: use deque<bool> or bitset instead.
