@@ -527,7 +527,7 @@ for (int i = 1; i <= 1000; ++i)
 - strings may or may not support per - object allocators. 
 - Different implementations have different policies regarding minimum allocations for character buffers.
 
-# Item 16: Know how to pass vector and string data to legacy APIs
+## Item 16: Know how to pass vector and string data to legacy APIs
 
 ```c++
 vector<int> v;
