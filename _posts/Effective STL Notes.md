@@ -1,6 +1,7 @@
 ---
 layout:		post
 title:		Effective STL Notes
+subtitle:
 date:		2017-11-21
 author: 	Grant6899
 header-img: img/post-bg-ios9-web.jpg
@@ -10,7 +11,6 @@ tags:
     - STL
     - Functional programming
 ---
-
 
 # Effective STL Notes
 
