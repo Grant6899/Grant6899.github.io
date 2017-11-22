@@ -3,6 +3,12 @@ layout:		post
 title:		Effective STL Notes
 date:		2017-11-21
 author: 	Grant6899
+header-img: img/post-bg-ios9-web.jpg
+catalog: true
+tags:
+    - c++
+    - STL
+    - Functional programming
 ---
 
 
