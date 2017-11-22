@@ -488,9 +488,9 @@ What we need to do:
 ```c++
 vector<int> v;
 // Lock aquired here
-vector<int>::iterator first5(find(v.begin(), v.end(), 5)); // Line 1
-	if (first5 != v.end()) { //Line 2
-		*first5 = 0; // Line 3
+vector<int>::iterator first5(find(v.begin(), v.end(), 5));
+	if (first5 != v.end()) {
+		*first5 = 0;
 	}
 // Lock released here
 ```

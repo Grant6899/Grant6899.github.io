@@ -40,6 +40,7 @@ Lambda function: Replacement for global functions or function objects(functors),
   Variables captured by value, can't be changed because the lambda function is const in the generated function object. To make the   lambda function non-const, define it as mutable. The original variable stays unchanged, but within the function body, the captured variable can be modified.
 
 - Capture-default in class
+
   |Syntax     |         Description |
   |:--------: |:------------------- |
   |[this]| captures only the this pointer|
