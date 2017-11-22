@@ -4,15 +4,13 @@ title:		Effective STL Notes
 subtitle:
 date:		2017-11-21
 author: 	Grant6899
-header-img: img/post-bg-ios9-web.jpg
+header-img: img/post-bg-c++.jpg
 catalog: true
 tags:
     - c++
     - STL
     - Functional programming
 ---
-
-# Effective STL Notes
 
 What written here is a brief summary for what I've learnd from [Effective STL](https://www.amazon.com/Effective-STL-Specific-Standard-Template/dp/0201749629) by Scott Meyers. The purpose of doing this is to remind myself every now and then in case these tricks get rusty.
 
@@ -608,3 +606,152 @@ bool* p = &v[0];
 ```
 
 Solutions: use deque<bool> or bitset instead.
+
+## Item 19: Understand the difference between equality and equivalence
+
+Equality: based on operator ==. We say A is euqal to B if "A == B" is true. Algorithms such as std::find use equality to find expected elements.
+
+Equivalence: based on "Compare" operator, which is Less<> by default. We say A and B have equivalent values if expression below is true:
+```c++
+!(A < B) && !(B < A)
+```
+Standard associative containers is always sorted respect to equivalence. In other words, if two elements are equivalent by "Compare", they cannot exist in same container.
+
+ciStinrgCompare is a functor that do case-insensitive string compare.
+```c++
+set<string, ciStringCompare> s1;
+s1.insert("Persephone");
+s1.insert("persephone");
+
+set<string> s2;
+s2.insert("Persephone");
+s2.insert("persephone");
+std::cout << "element count in s1:" << s1.size() << std::endl; // print 1
+std::cout << "element count in s2:" << s2.size() << std::endl; // print 2
+
+std::cout << (std::find(s1.begin(),s1.end(), "persephone") == s1.end()); // print true because std::find use string::operator==
+std::cout << (s1.find("persephone") == s1.end()); // print false, it will use equivalence
+```
+
+
+## Item 20: Specify comparison types for associative containers of pointers
+
+Remember to define a comparison for associative containers of pointers, otherwise the elements will be sorted by the pointer values, which are the hexadecimal memory addresses.
+
+## Item 21: Always have comparison functions return false for equal values
+
+As mentioned in Item 19, by default, set<int> is set<int, less<int>>. If we use set<int,less_equal<int>> to declare a set, we will have duplicates elements inserted without knowing it:
+
+```c++
+set<int,less_equal<int>> s;
+s.insert(10);
+s.insert(10); // try inserting 10 again and will cause undefined behaviour, which is not expected at all!
+```
+
+The reason is obvious, container will check if we have "same" key value already, which is
+```c++
+!(10 <= 10) && !(10 <= 10)
+```
+and get a false value indicating 10 and 10 are not equivalent.
+
+## Item 22: Avoid in-place key modification in set and multiset
+
+Since elements in set and multiset are sorted by key value, key modification will make modified elements in wrong locations and would  break the sorted=ness then cause unproper behaviors.
+
+When set non-key values, some STL implementation may reject it because find method returns a const pointer. You need to cast constness away before modification:
+```c++
+Employee selectedID; // a dummy employee with the selected ID number
+EmplDSet::iterator i = se.find(selectedlD);
+if (i != se.end()) { 
+	const_cast<Employee&>(*i).setTitle("Corporate Deity"); // cast away constness
+}
+```
+
+If you really want to change the key value, erase it and insert a new node like the way below:
+```c++
+EmplDSet::iterator i = se.find(selectedlD); // Step 1: find element to change
+if(i!=se.end()){
+	Employee e(*i); // Step 2: copy the element
+	se.erase(i++); // Step 3: remove the element; increment the iterator to maintain its validity (see Item 9)
+	e.setTitle("Corporate Deity"); // Step 4: modify the copy
+	se.insert(i, e); // Step 5: insert new value; hint that its location is the same as that of the original element
+}
+```
+
+## Item 23: Consider replacing associative containers with sorted vectors
+
+Associative containers is more efficient at average level, and this is concluded when we have insertions, erasure, search actions mixed. If the behaviour follows pattern below, a sorted vector might be a better option.
+
+1. **Setup**. Create a new data structure by inserting lots of elements into it. During this phase, almost all operations are insertions and erasures. Lookups are rare or nonexistent.
+2. **Lookup**. Consult the data structure to find specific pieces of information. During this phase, almost all operations are lookups.. Insertions and erasures are rare or nonexistent.
+3. **Reorganize**. Modify the contents of the data structure, perhaps by erasing all the current data and inserting new data in its place. Behaviorally, this phase is equivalent to phase 1. Once this phase is completed, the application returns to phase 2.
+
+
+Sometimes you may want to replace map and multimap with vectors as well. Just notice to have pair<K,V> as your element in vectors instead of pair<const K, V>, because when you sort the vector, the values of its elements will get moved around via assignment, and that means that both components of the pair must be assignable.
+
+## Item 24: Choose carefully between map::operator[] and map-insert when efficiency is important
+
+map::operator[] returns a reference to the value object associated with k. v is then assigned to the object to which the reference (the one returned from operator[]) refers. But if k isn't yet in the map, there's no value object for operator[] to refer to. In that case, it creates one from scratch by **using the value type's default constructor, operator[] then returns a reference to this newly-created object**. Then assign value to this new object.
+
+In short, map::operator[] is efficient to update existing nodes but not as good as insert when inserting new nodes.
+
+A possible efficient way (use it only when this matters):
+```c++
+template< typename MapType, typename KeyArgType, typename ValueArgtype> 
+typename MapType::iterator efficientAddOrUpdate(MapType& m, const KeyArgType& k, const ValueArgtype& v) {
+	typename MapType::iterator Ib = m.lower_bound(k); 
+	if(lb != m.end() && !(m.key_comp()(k, lb->first))) { // update
+		lb->second = v;
+		return Ib;
+	}
+	else{
+	typedef typename MapType::value_type MVT;
+	return m.insert(lb, MVT(k, v)); // insert
+	}
+}
+```
+
+## Item 25: Familiarize yourself with the nonstandard hashed containers
+
+Understand how hashed containers are implemented and related algorithms complexcity.
+
+## Item 26: Prefer iterator to const iterator, reverse_iterator, and const_reverse_iterator
+
+Most functions support iterators as arguments and STL has implicit conversions from others to iterator. Refer the diagram below:
+![iterator_conversion](https://github.com/Grant6899/Grant6899.github.io/tree/master/_post_img/iterator_conversion.PNG "iterator conversion")
+
+
+
+## Item 35: Implement simple case-insensitive string comparisons via mismatch or lexicographical compare
+
+Below is the implementation via lexicographical compare
+```c++
+bool ciCharLess(char c1, char c2) {
+	return tolower(static_cast<unsigned char>(c1)) < tolower(static_cast<unsigned char>(c2)); 
+} 
+
+bool ciStringCompare(const string& s1, const string& s2)
+{
+	return lexicographical_compare(s1.begin(), s1.end(), s2.begin(), s2.end(), ciCharLess);
+}
+
+int main() {
+	
+	std::cout << std::boolalpha << ciStringCompare("abc", "Abc") << std::endl;
+	std::cout << std::boolalpha << ciStringCompare("Abc", "abc") << std::endl;
+
+	return 0;
+}
+```
+
+output:
+```
+false
+false
+```
+
+This means "abc" and "Abc" will be regarded as equivalent by ciStringCompare.
+
+
+
+
