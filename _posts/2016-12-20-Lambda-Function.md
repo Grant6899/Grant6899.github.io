@@ -37,7 +37,7 @@ Lambda function: Replacement for global functions or function objects(functors),
 
 - Keyword **mutable**
 
-  Variables captured by value, can't be changed because the lambda function is const in the generated function object. To make the   lambda function non-const, define it as mutable. The original variable stays unchanged, but within the function body, the captured variable can be modified.
+  Variables captured by value, can't be changed because the lambda function is const in the generated function object. To make the lambda function non-const, define it as mutable. The original variable stays unchanged, but within the function body, the captured variable can be modified.
 
 - Capture-default in class
 
@@ -62,15 +62,11 @@ public:
 	// Calculate sine.
 	vector<double> Calculate(vector<double>& input) {
 	vector<double> result(input.size()); // Create result vector.
-	// Transform the input vector using a lambda function.
-	// The lambda function must capture the m_amplitude member variable.
-	// [m_amplitude] or [this->m_amplitude] does not work.
-	// Use [this] instead. Using [=] or [&] will also capture the this pointer. 
-    // Now you can use the members implicitly(m_amplitude)
-	// or explicitly (this->m_amplitude).
+
 	transform(input.begin(), input.end(), result.begin(), 
 	[this](double v) -> double
 	{ return m_amplitude*sin(6.28319*v/360.0); } );
 return result; // Return the result. }
 };
 ```
+Transform the input vector using a lambda function. The lambda function must capture the m_amplitude member variable. [m_amplitude] or [this->m_amplitude] does not work. Use [this] instead. Using [=] or [&] will also capture the this pointer. Now you can use the members implicitly(m_amplitude) or explicitly (this->m_amplitude).
