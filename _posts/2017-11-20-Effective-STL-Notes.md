@@ -23,7 +23,7 @@ Here's just an overview of how the author categorizes well-known STL containers:
 * **standard** STL **associative** containers: set, multiset, map, multimap
 * **nonstandard** **sequence** containers: slist, rope
 * **nonstandard associative** containers: hash_set, hash_multiset, hash_map, hash_multimap
-* **contiguous-memory** containers (array-based containers): vector, string, deque | rope
+* **contiguous-memory** containers (array-based containers): vector, string, deque, rope
 * **node-based** containers: list, slist and all standard associative containers
 
 
