@@ -1,3 +1,11 @@
+---
+layout:		post
+title:		Effective STL Notes
+date:		2017-11-21
+author: 	Grant6899
+---
+
+
 # Effective STL Notes
 
 What written here is a brief summary for what I've learnd from [Effective STL](https://www.amazon.com/Effective-STL-Specific-Standard-Template/dp/0201749629) by Scott Meyers. The purpose of doing this is to remind myself every now and then in case these tricks get rusty.
