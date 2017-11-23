@@ -718,9 +718,140 @@ Understand how hashed containers are implemented and related algorithms complexc
 ## Item 26: Prefer iterator to const iterator, reverse_iterator, and const_reverse_iterator
 
 Most functions support iterators as arguments and STL has implicit conversions from others to iterator. Refer the diagram below:
-![iterator_conversion](https://github.com/Grant6899/Grant6899.github.io/tree/master/_post_img/iterator_conversion.PNG "iterator conversion")
 
+![iterator_conversion](../_post_img/iterator_conversion.PNG)
 
+- Some versions of insert and erase require iterators.
+- It's not possible to implicitly convert a const iterator to an iterator, and the technique described in Item 27 for generating an iterator from a const_iterator is neither universally applicable nor guaranteed to be efficient.
+- Conversion from a reverse_iterator to an iterator may require iterator adjustment after the conversion.
+
+## Item 27： Use distance and advance to convert a container's const_iterators to iterators
+
+In order to convert a const_iterator to iterator, you can do something similar to this:
+
+```c++
+deque<int> de{ 1,2,3,4,5 };
+deque<int>::iterator i = de.begin();
+deque<int>::const_iterator cend = de.cend();
+advance(i, distance<deque<int>::const_iterator>(i, cend)); // i will point to the place to which de.end() points to
+```
+
+## Item 28: Understand how to use a reverse_iterator's base iterator
+
+Use a example to demonstrate:
+
+```c++
+vector<int> v{ 1,2,3,4,5 };
+vector<int>::reverse_iterator ri = find(v.rbegin, v.rend, 3);
+vector<int>::iterator i(ri.base());
+```
+
+After the execution, things will be like this:
+
+![iterator_conversion](../_post_img/reverse_iterator.PNG)
+
+- To emulate insertion at a position specified by a reverse_iterator ri, insert at the position ri.base() instead. For purposes of insertion, ri and ri.base() are equivalent, and ri.base() is truly the iterator corresponding to ri.
+
+- To emulate erasure(modification) at a position specified by a reverse_iterator ri, erase at the position preceding ri.base() instead. For purposes of erasure, ri and ri.base() are nor equivalent, and ri.base() is nor the iterator corresponding to ri. Do something similar to
+
+  ```c++
+  v.erase(++ri).base());
+  ```
+
+## Item 29: Consider istreambuf_iterators for character-by-character input
+
+Not used yet, will add in the future
+
+## Item 30: Make sure destination ranges are big enough
+
+Each algorithm that uses a destination range, writes its results by making **assignments** to the elements in the destination range. 
+
+So below code will not work because results is empty.
+```c++
+int tran_add(int x);
+vector<int> values {1, 2, 3, 4};
+vector<int> results;
+
+transform(values.begin(), values.end(), results.end(), tran_add); // error
+```
+
+Correct ways:
+```c++
+transform(values.begin(), values.end(), back_inserter(results), tran_add);
+transform(values.begin(), values.end(), front_inserter(results), tran_add);
+transform(values.begin(), values.end(), inserter(results, results.begin() + results.size()/2, tran_add);
+```
+
+## Item 31: Know your sorting options
+
+Stable sort: In a stable sort, if two elements in a range have equivalent values, their relative positions are unchanged after sorting.
+
+- If you need to perform a full sort on a vector, string, deque, or array, you can use sort or stable_sort
+- If you have a vector, string, deque, or array and you need to put only the top n elements in order, partial_sort is available
+- If you have a vector, string, deque, or array and you need to identify the element at position n or you need to identify the top n elements without putting them in order. nth_element is at your beck and call
+- If you need to separate the elements of a standard sequence container or an array into those that do and do not satisfy some criterion, you're probably looking for partition or stable_partition
+- If your data is in a list, you can use partition and stable_partition directly, and you can use list-sort in place of sort and stable_sort. If you need the effects offered by partial_sort or nth_element, you'll have to approach the task indirectly
+
+Sort algorithms Efficiency comparision: Principle is that algorithms that do more work take longer to do it. and algorithms that must sort stably take longer than algorithms that can ignore stability.
+
+**Efficiency: partition > stable_partition > nth_element > partial_sort > sort > stable_sort**
+
+Indirect approach for list to use partial_sort or nth_element:
+1. Copy the elements into a container with random access iterators, then apply the desired algorithm to that. 
+2. Create a container of list::iterators, use the algorithm on that container, then access the list elements via the iterators. 
+3. Use the information in an ordered container of iterators to iteratively splice the list's elements into the positions you'd like them to be in.
+
+## Item 32: Follow remove-like algorithms by erase if you really want to remove something
+
+Understand that remove algorithm is just moving elements behind to fill the location of elements to be removed. Its size will not even change.
+
+```c++
+vector<int> v_remove{ 1,2,3,99,5,99,7,8,9,99 };
+remove(v_remove.begin(), v_remove.end(), 99);
+for_each(v_remove.begin(), v_remove.end(), [](int it) {cout << it << " "; }); // print 1 2 3 5 7 8 9 8 9 99
+```
+
+**Always use erase to really remove elements after the new end iterator returned by remove!!!**
+
+## Item 33: Be wary of remove-like algorithms on containers of pointers
+
+For a vector of pointers of Widget:
+
+![remove_if_pointer1](../_post_img/remove_if_pointer_1.PNG)
+
+After remove_if: Memory leak already happens!
+
+![remove_if_pointer2](../_post_img/remove_if_pointer_2.PNG)
+
+After erase:
+
+![remove_if_pointer3](../_post_img/remove_if_pointer_3.PNG)
+
+Solution:
+
+- Delete pointers first by the critiria then remove if. It may require more loops.
+- Use shared_ptr.
+
+## Item 34: Note which algorithms expect sorted ranges
+
+Some algorithms expect ranges that are already sorted:
+- binary_search
+- lower_bound
+- upper_bound
+- equal_range
+- set_union
+- set_intersection
+- set_difference
+- set_symmetric_difference
+- merge
+- inplace_merge
+- includes
+
+Algorithms that are typically used with sorted ranges, though they don't require them:
+- unique
+- unique_copy
+
+**Passing unsorted ranges may cause undefined behaviour!**
 
 ## Item 35: Implement simple case-insensitive string comparisons via mismatch or lexicographical compare
 
@@ -751,7 +882,6 @@ false
 ```
 
 This means "abc" and "Abc" will be regarded as equivalent by ciStringCompare.
-
 
 
 
