@@ -883,5 +883,184 @@ false
 
 This means "abc" and "Abc" will be regarded as equivalent by ciStringCompare.
 
+## Item 36: Understand the proper implementation of copy_if
+
+"copy" algorithms:
+- copy
+- copy_backward
+- replace_copy
+- reverse_copy
+- replace_copy_if
+- unique_copy
+- remove_copy
+- rotate_copy
+- remove_copy_if
+- partial_sort_copy_unintialized_copy
+- unintialized_copy
+
+Since we don't have a copy_if algorithm, we can do it in this way:
+```c++
+template<typename InputIterator,  typename OutputIterator, typename Predicate>
+OutputIterator copy_if(InputIterator begin, InputIterator end, OutputIterator destBegin, Predicate p) {
+	while (begin != end) {
+ 		if (p(*begin))*destBegin++ = *begin;
+ 		++begin;
+ 	}
+ 	return destBegin;
+}
+```
+
+## Item 37: Use accumulate or for_each to summarize ranges
+
+Make sure the start value in accumulate's type same as elements.
+
+```c++
+list<double> ld;
+double sum = accumulate(ld.begin(), Id.end(), 0.0); // Do not put 0 here.
+```
+
+# Item 38: Make your functor pass-by-value
+
+Two things you need to ensure:
+
+1. Fucntor should be small so they can be copied with low cost
+2. Your function objects must be monomorphic
+
+A bridge design pattern might be needed to make it happen because it only needs to copy the pointer:
+```c++
+template<typename T>
+class BPFCImpl : public unary_function<T, void> {
+private:
+ 	Widget w;
+ 	int x;
+ 	//...
+ 	virtual ~BPFCImpl();
+ 	virtual void operator()(const T& val) const;
+ 	friend class BPFC<T>;
+};
+
+template<typename T>
+class BPFC:
+ 	public unary_function<T, void> {
+private:
+ 	BPFCImpl<T> *pImpl;
+public:
+ 	void operator()(const T& val) const { 
+ 	pImpl->operator() (val);
+ 	}
+    //...
+};
+```
+
+# Item 39: Make predicates pure functions
+
+Definition:
+
+- A **predicate** is a function that returns bool
+
+- A **pure function** is a function whose return value depends only on its parameters
+
+A bad example:
+```c++
+bool anotherBadPredicate(const Widget&, const Widget&) {
+	static int timesCalled = 0; 
+ 	return ++timesCalled == 3; // its return value depends on static variables
+} 
+```
+# Item 40 ~ 41: Make functor classes adaptable, Understand the reasons for ptr_fun, mem_fun, and mem_fun_ref
+
+Before C++11, functinal programming is limited within uniary_fucntion, binary_function. They have to be adapted by using ptr_fun, mem_fun, and mem_fun_ref. 
+
+Nowadays, we prefer lambda functions and std::functions to define these functors by which we can avoid these adaption issues.
+
+## Item 42: Make sure less<T> means operator<
+
+It's natural to have this claim that less<T\> should call T's operator<. If you really want an associative container to be sorted by a special compare, define a seperate functor to realize it instead of calling it less which will make people confused.
 
 
+## Item 43: Prefer algorithm calls to hand-written loops
+
+There are three reasons:
+- Efficiency: Algorithms are often more efficient than the loops programmers produce.
+- Correctness: Writing loops is more subject to errors than is calling algorithms.
+- Maintainability: Algorithm calls often yield code that is clearer and more straightforward than the corresponding explicit loops.
+
+## Item 44: Prefer member functions to algorithms with the same names
+
+When you're comparing std::find and std::set::find, there is no doubt that a specilized version works better.
+
+std::set::find will utilize set's property of being sorted, to do the binary search whose complecity is O(logN). On the other hand, std::find is a generalized method which has a O(logN) complexcity.
+
+## Item 45: Distinguish among count, find, binary search, lower_bound, upper_bound, and equal_range
+
+
+|What You Want to Know   | On an Unsorted range  | On a Sorted Range  | With a set or map  | With a multiset or multimap  |
+|---|---|---|---|---|
+| Does the desired value exist?  | find  | binary_search  | count  | find  |
+| Does the desired value exist? If so, where is the fisrt object with that value?  | find  | equal_range | find  | find/lower_bound   |
+| Where is the first object value not preceding the desired value?  | find_if  | lower_bound  | lower_bound  | lower_bound  |
+| Where is the first object value succeeding the desired value?  | find_if  | upper_bound  | upper_bound  | upper_bound  |
+| How many objects have the desried value?  | count  | equal_range  | count  | count  |
+| Where are all the objects with the desired value?  | find(iteratively)  | equal_range  | equal_range  | equal_range  |
+
+Note: On an Unsorted range / On a Sorted Range are using general algorithms,  With a set or map / With a multiset or multimap are using member functions.
+
+## Item 46: Consider function objects instead of functions as algorithm parameters
+
+1. For higher efficiency, the reaosn is inline functions. greater<double>::operator() is an inline function, which is faster than user-defined functions.
+2. It can avoid some unkonwn bugs on certain STL platforms.
+```c++
+// below will not complie
+set<string> s;
+//...
+transform(s.begin(), s.end(), ostream_iterator<string::size_type>(cout, "\n"), mem_fun_ref(&string::size));
+
+// below complies
+struct StringSize:
+ public unary_function<string, string::size_type>{ 
+ string::size_type operator()(const string& s) const // remember to declare const
+ {
+ return s.size();
+ }
+};
+
+transform(s.begin(), s.end(), ostream_iterator<string::size_type>(cout, "\n"), StringSize());
+```
+## Item 47: Avoid producing write-only code.
+
+Increase the readablity of your code when using STL. Don't have somthing like this:
+```c++
+vector<int> v;
+int x, y;
+//...
+v.erase(
+ remove_if(find_if(v.rbegin(), v.rend(),
+ bind2nd(greater_equal<int>(), y)).base(),
+ v.end(),
+ bind2nd(less<int>(), x)),
+ v.end());
+```
+
+## Item 48: Always #include the proper headers
+
+Tips for including:
+1. Almost all the containers are declared in headers of the same name, i.e., vector is declared in <vector>. list is declared in <list>, etc. The exceptions are <set> and <map>. <set> declares both set and multiset, and <map> declares both map and multimap
+2. All but four algorithms are declared in <algorithm>. The exceptions are accumulate (see Item 37), inner_product, adjacent_difference, and partial_sum. Those algorithms are declared in <numeric>
+3. Special kinds of iterators, including istream_iterators and istreambuf_iterators (see Item 29), are declared in <iterator>.
+4. Standard functors (e.g., less<T>) and functor adapters (e.g., not1, bind2nd) are declared in <functional>.
+
+## Item 49: Learn to decipher STL-related compiler diagnostics
+
+Here are some common mistakes you may make:
+- For vector and string, iterators are usually pointers, so compiler diagnostics will likely refer to pointer types if you've made a mistake with an iterator. For example, if your source code refers to vector<double>::iterators, compiler messages will almost certainly mention double* pointers
+- Messages mentioning back_insert_iterator, front_insert_iterator, or insert_iterator almost always mean you've made a mistake calling back_inserter, front_inserter, or inserter
+- If you get a message mentioning binder1st or binder2nd, you've probably made a mistake using bind1st or bind2nd
+- Output iterators (e.g., ostream_iterators, ostreambuf_iterators (see Item 29), and the iterators returned from back_inserter, front_inserter, and inserter) do their outputting or inserting work inside assignment operators, so if you've made a mistake with one of these iterator types, you're likely to get a message complaining about something inside an assignment operator you've never heard of
+- If you get an error message originating from inside the implementation of an STL algorithm, there's probably something wrong with the types you're trying to use with that algorithm
+- If you're using a common STL component like vector, string, or the for_each algorithm, and a compiler says it has no idea what you're talking about, you've probably failed to #include a required header file
+
+
+## Item 50: Familiarize yourself with STL-related web sites
+- The SGI STL site, http://www.sgi.com/tech/stl/.
+- The STLport site, http://www.stlport.org/.
+- The Boost site, http://www.boost.org/.
