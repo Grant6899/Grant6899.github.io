@@ -1,6 +1,6 @@
 ---
 layout:		post
-title:		Yield Curve Constructions
+title:		Yield Curve in Quantlib
 subtitle:
 date:		2017-11-25
 author: 	Grant6899
@@ -8,9 +8,9 @@ header-img: img/post-bg-c++.jpg
 catalog: true
 tags:
     - c++
-	- Instrument
     - Quantlib
 ---
+
 
 ## What is a yield curve?
 
