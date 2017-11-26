@@ -2,7 +2,7 @@
 layout:		post
 title:		Observer, Observable and LazyObject
 subtitle:
-date:		2017-11-23
+date:		2017-11-24
 author: 	Grant6899
 header-img: img/post-bg-c++.jpg
 catalog: true
