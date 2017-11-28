@@ -919,7 +919,7 @@ list<double> ld;
 double sum = accumulate(ld.begin(), Id.end(), 0.0); // Do not put 0 here.
 ```
 
-# Item 38: Make your functor pass-by-value
+## Item 38: Make your functor pass-by-value
 
 Two things you need to ensure:
 
@@ -952,7 +952,7 @@ public:
 };
 ```
 
-# Item 39: Make predicates pure functions
+## Item 39: Make predicates pure functions
 
 Definition:
 
@@ -967,7 +967,7 @@ bool anotherBadPredicate(const Widget&, const Widget&) {
  	return ++timesCalled == 3; // its return value depends on static variables
 } 
 ```
-# Item 40 ~ 41: Make functor classes adaptable, Understand the reasons for ptr_fun, mem_fun, and mem_fun_ref
+## Item 40 ~ 41: Make functor classes adaptable, Understand the reasons for ptr_fun, mem_fun, and mem_fun_ref
 
 Before C++11, functinal programming is limited within uniary_fucntion, binary_function. They have to be adapted by using ptr_fun, mem_fun, and mem_fun_ref. 
 
