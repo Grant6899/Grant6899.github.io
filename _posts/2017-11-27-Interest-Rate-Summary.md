@@ -97,7 +97,7 @@ Notation: T below is year fraction.
   
 - Discount factor vs annually-compounded rate(YTM of a US Treasury bond with annual coupons)
   
-  ![dfvscompound](http://latex.codecogs.com/gif.latex?DF(T)&space;=&space;\frac{1}{{(1&plus;r)}^T}) 
+  ![dfvscompound](http://latex.codecogs.com/gif.latex?DF(T)&space;=&space;\frac{1}{(1&plus;r)^T}) 
   
 - Discount factor vs money market rate(LIBOR):
   
