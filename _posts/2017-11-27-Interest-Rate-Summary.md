@@ -56,9 +56,9 @@ Comments:
 
 - Simple: ![simpleequation](http://latex.codecogs.com/gif.latex?1&plus;rt)
 
-- Compounded: ![compundedequation](http://latex.codecogs.com/gif.latex?(1&plus;r)^t)
+- Compounded: ![compundedequation](http://latex.codecogs.com/gif.latex?%281&plus;r%29%5Et)
 
-- Continuous: ![continuousequation](http://latex.codecogs.com/gif.latex?e^{rt})
+- Continuous: ![continuousequation](http://latex.codecogs.com/gif.latex?e%5E%7Brt%7D)
 
 - SimpleThenCompounded: Simple up to the first period then Compounded
 
@@ -93,31 +93,31 @@ Notation: T below is year fraction.
 
   There is no compounding in zero-coupon bond, so:
 
-  ![dfvszero](http://latex.codecogs.com/gif.latex?DF(T)&space;=&space;\frac{1}{1&plus;rT})
+  ![dfvszero](http://latex.codecogs.com/gif.latex?DF%28T%29%3D%5Cfrac%7B1%7D%7B1&plus;rT%7D)
   
 - Discount factor vs annually-compounded rate(YTM of a US Treasury bond with annual coupons)
   
-  ![dfvscompound](http://latex.codecogs.com/gif.latex?DF(T)&space;=&space;\frac{1}{{(1&plus;r)}^T}) 
+  ![dfvscompound](http://latex.codecogs.com/gif.latex?DF%28T%29%3D%5Cfrac%7B1%7D%7B%281&plus;r%29%5ET%7D) 
   
 - Discount factor vs money market rate(LIBOR):
   
-  ![dfvsmmr](http://latex.codecogs.com/gif.latex?DF(T)&space;=&space;\frac{1}{{(1&plus;\frac{r}{360})}^{360T}})
+  ![dfvsmmr](http://latex.codecogs.com/gif.latex?DF%28T%29%3D%5Cfrac%7B1%7D%7B%281&plus;%5Cfrac%7Br%7D%7B360%7D%29%5E%7B360T%7D%7D)
   
 - Discount factor vs money market rate whose DCC is ACT/365:
   
-  ![dfvsmmr365](http://latex.codecogs.com/gif.latex?DF(T)&space;=&space;\frac{1}{{(1&plus;\frac{r}{365})}^{365T}})
+  ![dfvsmmr365](http://latex.codecogs.com/gif.latex?DF%28T%29%3D%5Cfrac%7B1%7D%7B%281&plus;%5Cfrac%7Br%7D%7B365%7D%29%5E%7B365T%7D%7D)
   
 - Discount factor in mannual/theoretical calculation:
 
   Sometimes, for manual calculation, the continuously-compounded hypothesis is a close-enough approximation of the daily-compounding hypothesis, and makes calculation easier (**even though it does not have any real application as no financial instrument is continuously compounded**)
   
-  ![dfvsman](http://latex.codecogs.com/gif.latex?DF(T)&space;=&space;e^{-rT})
+  ![dfvsman](http://latex.codecogs.com/gif.latex?DF%28T%29%3De%5E%7B-rT%7D)
   
 #### Forward Rate
   
 -  The forward rate is the future yield on a bond. It is calculated using the yield curve. For example, the yield on a three-month Treasury bill six months from now is a forward rate.
   
-   ![dfvsfr](http://latex.codecogs.com/gif.latex?r_{1,2}&space;=&space;\frac{1}{t_2-t_1}[\frac{DF(0,t_1)}{DF(0,t_2)}&space;-&space;1])
+   ![dfvsfr](http://latex.codecogs.com/gif.latex?r_%7B1%2C2%7D%3D%5Cfrac%7B1%7D%7Bt_2-t_1%7D%5B%5Cfrac%7BDF%280%2Ct_1%29%7D%7BDF%280%2Ct_2%29%7D-1%5D)
 
 
 ### Typical attributes common interest rate (pending)
