@@ -46,7 +46,7 @@ tags:
 |Business252| Jan/1/2012 | Mar/30/2012 | 22 + 19 + 22 - 1 = 62(This is by default using Brazil's calender in quantlib, Jan/01, Feb 21-22 are holidays) | 62/252 = 0.246032  | 
 |OneDayCounter| Jan/1/2012 | Mar/30/2012 | 1 | 1 |
 |SimpleDayCounter| Jan/1/2012 | April/1/2012 | 31 + 29 + 31 - 1 = 90 | 3 month/12 month = 0.25  | 
-|Thirty360| Jan/1/2012 | Mar/30/2012 | 1 | 1 |
+|Thirty360| Jan/1/2012 | Mar/30/2012 | (3-1-1) * 30 + 29 + 30 = 89 | 89/360 = 0.24722 |
 
 Comments:
 - SimpleDayCounter: Simple day counter is for reproducing theoretical calculations. This day counter tries to ensure that whole-month distances are returned as a simple fraction, i.e., 1 year = 1.0, 6 months = 0.5, 3 months = 0.25 and so forth. This day counter should be used together with **NullCalendar**, which ensures that dates at whole-month distances share the same day of month. It is not guaranteed to work with any other calendar.
