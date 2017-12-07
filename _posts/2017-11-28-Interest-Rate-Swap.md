@@ -1,15 +1,15 @@
 ---
 layout:		post
-title:		Interest Rate Swap
+title:		Interest rate swap
 subtitle:
 date:		2017-11-28
 author: 	Grant6899
-header-img: img/post-bg-finance.png
+header-img: img/post-bg-finance.jpg
 catalog: true
 tags:
     - Finance
-	- Derivatives
-    - Interview
+    - Derivatives
+	- Interview
 ---
 
 ## Definition
