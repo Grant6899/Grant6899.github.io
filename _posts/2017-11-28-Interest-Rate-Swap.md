@@ -9,7 +9,6 @@ catalog: true
 tags:
     - Finance
     - Derivatives
-	- Interview
 ---
 
 ## Definition
