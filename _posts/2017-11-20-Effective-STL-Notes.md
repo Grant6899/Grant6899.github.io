@@ -593,7 +593,7 @@ v -- after clear: size: 0, capacity: 107
 v -- after swap with empty vector: size: 0, capacity: 0
 ```
 
-## Item 18: Avoid using vector<bool>
+## Item 18: Avoid using vector of bool
 Among the requirements is that if c is a container of objects of type T and c supports operator[], the following must compile:
 ```c++
 T *p = &c[0];
