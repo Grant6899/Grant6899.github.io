@@ -9,6 +9,7 @@ catalog: true
 tags:
     - c++
     - Lambda expression
+	- c++11
 ---
 
 Lambda function: Replacement for global functions or function objects(functors), can generate unnamed function objects.
@@ -37,7 +38,11 @@ Lambda function: Replacement for global functions or function objects(functors),
 
 - Keyword **mutable**
 
-  Variables captured by value, can't be changed because the lambda function is const in the generated function object. To make the lambda function non-const, define it as mutable. The original variable stays unchanged, but within the function body, the captured variable can be modified.
+  Variables captured by value, can't be changed because the lambda function is **const** in the generated function object. To make the lambda function non-const, define it as mutable. **The original variable stays unchanged, but within the function body, the captured variable can be modified.**
+  
+- Functor Rule
+ 
+  A functor's return value should only depend on the value passed as argument and not impacted by "stage variables".** The stage variable can be captured values, global static variables defined outside, etc. 
 
 - Capture-default in class
 

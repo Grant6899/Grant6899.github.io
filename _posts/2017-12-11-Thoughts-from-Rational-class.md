@@ -400,4 +400,16 @@ According to [cppreference](http://en.cppreference.com/w/cpp/language/value_cate
 
 **A function call or an overloaded operator expression, whose return type is non-reference, such as str.substr(1, 2), str1 + str2, or it++** is one of rvalue types.
 
+As for accepting argument:
+
+(1). Const lvalue reference is the most powerful parameter style, which can accept lvalue, rvalue, const lvalue, const rvalue.
+
+(2). Normal lvalue reference cannot take rvalue. This is why 
+```c++
+ostream& operator<<(ostream &os, Rational& obj);
+```
+will not work if you have cout << r1 + r2.
+
+(3). For constructors, compiler will generate them automatically for different scenarios. More details check [the reference](http://en.cppreference.com/w/cpp/language/move_constructor).
+    
 
