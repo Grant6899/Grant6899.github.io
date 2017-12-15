@@ -115,6 +115,11 @@ ListNode* FastSlowList(ListNode* head) {
 }
 ```
 
+Usages:
+- Divide original list into two whose length are same ( |len1 - len2| <= 1)
+- Check if there is circle in the list and find the entry node of the circle
+
+
 ### Check if two linked lists have intersection
 
 Have two pointers start from begining of each list, then move them 1 node forward each time, if it's null then make current pointer to the other list's beginning. Stop the loop until they meet each other, if the node where they meet is not NULL then it's the entry point of intersection, otherwise there is no intersection.
@@ -123,9 +128,7 @@ Have two pointers start from begining of each list, then move them 1 node forwar
 
 
 
-Usages:
-- Divide original list into two whose length are same ( |len1 - len2| <= 1)
-- Check if there is circle in the list and find the entry node of the circle
+
 
 ### Recursively Merge Two Sorted Lists
 ```c++
