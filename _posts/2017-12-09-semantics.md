@@ -8,11 +8,9 @@ header-img: img/post-bg-c++.jpg
 catalog: true
 tags:
     - c++
-    - java
-	- python
-	- deep copy
+    - Java
+	- Python
 ---
-
 
 ## Definition
 
