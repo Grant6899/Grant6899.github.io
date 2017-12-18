@@ -8,8 +8,6 @@ header-img: img/post-bg-c++.jpg
 catalog: true
 tags:
     - c++
-    - Java
-	- Python
 ---
 
 ## Definition
