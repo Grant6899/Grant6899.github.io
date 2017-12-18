@@ -2,7 +2,7 @@
 layout:		post
 title:		Virtual Inheritance
 subtitle:
-date:		2017-12-08
+date:		2017-12-17
 author: 	Grant6899
 header-img: img/post-bg-c++.jpg
 catalog: true
