@@ -15,7 +15,7 @@ tags:
 
 As we all know, when we're trying to create classes in the below structure:
 
-[Diamond](../_post_img/MI.jpg)
+![Diamond](../_post_img/MI.jpg)
 
 A natural way comes to our mind is
 ```c++
