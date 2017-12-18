@@ -9,6 +9,8 @@ catalog: true
 tags:
     - c++
     - java
+	- python
+	- deep copy
 ---
 
 
@@ -24,7 +26,7 @@ We say a type is reference semantic when either of below holds:
 
 
 
-## Example in Java and C++
+## Example in Java, C++ and Python
 
 In java, objects of primitive data types are value semantic.
 
@@ -61,6 +63,46 @@ ItemBook a1;
 ItemBook a2 = a1;
 ```
 After copy, a1 is independent of a2 since the copy is implemented by complier with default method.
+
+
+In Python, we have two groups of types: 
+
+1. immutable type, basic types like integer and string is value sematic
+    ```python
+    str1 = "abc"
+    str2 = str1
+    id(str1)
+    id(str2)
+    str2 = str2 + "d"
+    id(str1)
+    id(str2)
+    ```
+2. complex type/class like list is reference semantic
+    ```python
+	list1 = ['apple', 'mango', 'carrot', 'banana']
+    list2 = list1
+    del list2[0]
+    print(list1)
+    ```
+   You will see both list1 and list2's first element is erased. This is like what we see in Java.
+   
+   **To create a copy, you can assign a slice to another list.**
+   ```python
+   list2 = list1[:]
+   ```
+   It will be an independent copy(like deep copy in C++, new memory will be allocated). For a general deep copy, you can do:
+   ```python
+   from copy import deepcopy
+
+   lst1 = ['a','b',['ab','ba']]
+
+   lst2 = deepcopy(lst1)
+
+   lst2[2][1] = "d"
+   lst2[0] = "c";
+   print lst2
+   print lst1
+   ```
 
 
 ## How to make reference semantic type non-copyable
