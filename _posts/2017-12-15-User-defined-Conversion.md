@@ -2,7 +2,7 @@
 layout:		post
 title:		User-defined Conversion
 subtitle:
-date:		2017-12-15
+date:		2017-12-19
 author: 	Grant6899
 header-img: img/post-bg-c++.jpg
 catalog: true
@@ -61,4 +61,8 @@ si + 3; // error: implicit conversion is required, but operator int is explicit
 static_cast<int>(si) + 3; // ok: explicitly request the conversion
 ```
 
+**Explicit and implicit constructors can convert other types to the current class. Vice versa, explicit and implicit conversion operator can convert current class to other types.**
+
+
 **Conversion to bool is usually intended for use in conditions. As a result, operator bool ordinarily should be defined as explicit.**
+
