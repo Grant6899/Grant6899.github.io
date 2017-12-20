@@ -123,8 +123,6 @@ Output from the destructor of class ClxDerived!
 
 ## Item 8: Prevent exceptions from leaving destructors
 
-
-
 - Destructors should never emit exceptions. If functions called in a destructor may throw, the destructor should catch any exceptions, then swallow them or terminate the program.
    
    - Swallow:
@@ -149,16 +147,91 @@ Output from the destructor of class ClxDerived!
      ```
      
 - If class clients need to be able to react to exceptions thrown during an operation, the class should provide a regular (i.e., non-destructor) function that performs the operation.     
-     
-     
-     
-     
-     
-     
-     
-     
-     
-     
-     
+    
+## Item 9: Never call virtual functions during construction or destruction
 
+- During base class construction, virtual functions never go down into derived classes. Instead, the object behaves as if it were of the base type. Because base class constructors execute before derived class constructors, derived class data members have not been initialized when base class constructors run.
+     
+- The same reasoning applies during destruction. Once a derived class destructor has run, the object’s derived class data members assume undefined values, so C++ treats them as if they no longer exist.
 
+## Item 10: Have assignment operators return a reference to *this
+
+Chain assignment in C++:
+
+```c++
+int x, y, z;
+x = y = z = 15;
+```
+
+To make the chain assignment work, you should follow a certain convention when implementing assignment operator:
+```c++
+Widget& operator=(const Widget& rhs){ // return type is a reference to
+...
+return *this; // return the left-hand object
+}
+```
+
+## Item 11: Handle assignment to self in operator=
+
+- Make sure operator= is well-behaved when an object is assigned to itself. Techniques include comparing addresses of source and target objects, careful statement ordering, and copy-and-swap.
+
+	- Identity test
+		```c++
+    	Widget& Widget::operator=(const Widget& rhs){
+			if (this == &rhs) return *this; // identity test: if a self-assignment,
+			// do nothing
+			delete pb;
+			pb = rhs.pb;
+			return *this;
+		}
+    	```
+	- Share underlying resource
+	 
+      above will make a shallow copy, make pointer of two instances point to the same underlying object.
+	- Deep copy
+		```c++
+    	Widget& Widget::operator=(const Widget& rhs){
+			if (this == &rhs) return *this; // identity test: if a self-assignment,
+			// do nothing
+			delete pb;
+			pb = new Bitmap(*rhs.pb);
+			return *this;
+		}
+    	```
+	- Copy and swap
+		```c++
+        Widget& Widget::operator=(const Widget& rhs){
+			Widget temp(rhs); // make a copy of rhs’s data
+			swap(temp); // swap *this’s data with the copy’s
+			return *this;
+		}
+        ```
+
+- Make sure that any function operating on more than one object behaves
+correctly if two or more of the objects are the same.
+
+     
+## Item 12: Copy all parts of an object
+     
+When you declare your own copying functions, you are indicating to compilers that there is something about the default implementations you don’t like. If you add a data member to a class, you need to make sure that you update the copying functions, too. 
+     
+**Derived class copying functions must invoke their corresponding base class functions.**
+
+- Copy all local data members
+- Invoke the appropriate copying function in all base classes
+
+```c++
+PriorityCustomer::PriorityCustomer(const PriorityCustomer& rhs) : Customer(rhs), // invoke base class copy ctor
+priority(rhs.priority) // copy local member
+{
+	logCall("PriorityCustomer copy constructor");
+}
+
+PriorityCustomer& PriorityCustomer::operator=(const PriorityCustomer& rhs)
+{
+	logCall("PriorityCustomer copy assignment operator");
+	Customer::operator=(rhs); // assign base class parts
+	priority = rhs.priority;
+	return *this;
+}
+```
