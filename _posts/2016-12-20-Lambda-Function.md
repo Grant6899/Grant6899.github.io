@@ -9,7 +9,6 @@ catalog: true
 tags:
     - c++
     - Lambda expression
-	- c++11
 ---
 
 Lambda function: Replacement for global functions or function objects(functors), can generate unnamed function objects.
