@@ -227,3 +227,60 @@ void clearBrowser(WebBrowser& wb)
 	}
 	```
 
+## Item 25: Consider support for a non-throwing swap
+
+- First, if the default implementation of swap offers acceptable efficiency for your class or class template, you don’t need to do anything. Anybody trying to swap objects of your type will get the default version, and that will work fine.
+
+- Second, if the default implementation of swap isn’t efficient enough(which almost always means that your class or template is using some variation of **the pimpl idiom**), do the following: 
+	```c++
+	class Widget { // class using the pimpl idiom
+	public:
+	Widget(const Widget& rhs);
+	Widget& operator=(const Widget& rhs) // to copy a Widget, copy its
+	{ // WidgetImpl object. For
+		... // details on implementing
+		*pImpl = *(rhs.pImpl); // operator= in general,
+		... // see Items 10, 11, and 12.
+	}
+	...
+	private:
+	WidgetImpl *pImpl; // ptr to object with this
+	};
+	```
+	- 1. Offer a public swap member function that efficiently swaps the value of two objects of your type. This function should never throw an exception.
+		```c++
+        class Widget { // same as above, except for the
+		public: // addition of the swap mem func
+		...
+		void swap(Widget& other){
+			using std::swap; 
+			swap(pImpl, other.pImpl); // to swap Widgets, swap their
+		} // pImpl pointers
+		...
+		};
+        ```
+	- 2. If Widget is a pure class(not template), offer a non-member swap in std as a revised specialization of std::swap. Have it call your swap member function.
+		```c++
+        namespace std {
+			template<> // revised specialization of
+			void swap<Widget>(Widget& a, Widget& b){
+				a.swap(b); // to swap Widgets, call their
+			} // swap member function
+		}
+        ```
+
+	- 3. If you’re writing a class template, specialize std::swap for your class. Have it also call your swap member function.
+	
+		```c++
+		namespace WidgetStuff {
+			... // templatized WidgetImpl, etc.
+			template<typename T> // as before, including the swap
+			class Widget { ... }; // member function
+			...
+			template<typename T> // non-member swap function;
+			void swap(Widget<T>& a, Widget<T>& b){ // not part of the std namespace
+			a.swap(b);
+			}
+		}
+        ```
+- Finally, if you’re calling swap, be sure to include a using declaration to make std::swap visible in your function, then call swap without any namespace qualification.
