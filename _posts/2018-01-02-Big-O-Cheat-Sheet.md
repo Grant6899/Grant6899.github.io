@@ -29,7 +29,7 @@ tags:
   	</tr>
   	<tr>
     	<th>Array</th>
-        <td>O(n)</td>
+        <td>N/A</td>
         <td>N/A</td>
         <td>O(1)</td>
         <td>N/A</td>
