@@ -15,7 +15,7 @@ tags:
 
 <table align="left">
 	<tr>
-    <th rowspan="2">Data Structure</th>
+    <th rowspan="2" align="middle">Data Structure</th>
     <th colspan="3">Average cases</th>
     <th colspan="3">Worst cases</th>
     </tr>
