@@ -28,7 +28,25 @@ tags:
         <th>Search</th>
   	</tr>
   	<tr>
-    	<th>Array/Stack/Queue</th>
+    	<th>Array</th>
+        <td>O(n)</td>
+        <td>N/A</td>
+        <td>O(1)</td>
+        <td>N/A</td>
+        <td>N/A</td>
+        <td>O(1)</td>
+  	</tr>
+  	<tr>
+    	<th>Sorted array</th>
+        <td>O(n)</td>
+        <td>O(n)</td>
+        <td>O(log(n))</td>
+        <td>O(n)</td>
+        <td>O(n)</td>
+        <td>O(log(n))</td>
+  	</tr>    
+  	<tr>
+    	<th>Stack/Queue</th>
         <td>O(1)</td>
         <td>O(1)</td>
         <td>O(n)</td>
@@ -71,6 +89,24 @@ tags:
         <td>O(n)</td>
         <td>O(n)</td>
         <td>O(n)</td>
+  	</tr>    
+  	<tr>
+    	<th>AVL tree</th>
+        <td>O(log(n))</td>
+        <td>O(log(n))</td>
+        <td>O(log(n))</td>
+        <td>O(log(n))</td>
+        <td>O(log(n))</td>
+        <td>O(log(n))</td>
+  	</tr>
+  	<tr>
+    	<th>Red-Black tree</th>
+        <td>O(log(n))</td>
+        <td>O(log(n))</td>
+        <td>O(log(n))</td>
+        <td>O(log(n))</td>
+        <td>O(log(n))</td>
+        <td>O(log(n))</td>
   	</tr>    
 </table>
 
