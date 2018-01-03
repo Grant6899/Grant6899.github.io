@@ -129,9 +129,27 @@ Memory  allocated by the new operator persists until it is freed with the delete
 Variables declared with the "thread_local" keyword have storage that persists for as long as the containing thread lasts.
 
 
+### Quiz
 
+What's the output of program below?
 
+```c++
+#include <iostream>
+using namespace std;
 
+template <class T> void f(T) {
+  static int i = 0;
+  cout << ++i;
+}
+
+int main() {
+  f(1);
+  f(1.0);
+  f(1);
+}
+```
+
+Hint: how many functions will be instansiated?
 
 
 
