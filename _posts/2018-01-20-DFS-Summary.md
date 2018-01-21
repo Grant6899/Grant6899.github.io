@@ -125,6 +125,8 @@ private:
                 current.pop_back();
             }
         }
+		
+		// if cannot find, return false. Important!!!
         return false;
     }
 
@@ -167,12 +169,14 @@ Note the bottom corner is not colored 2, because it is not 4-directionally conne
 to the starting pixel.
 
 From 
+
 | 1 | 1 | 1 |
 |:-:|:-:|:-:|  
 | 1 | 1 | 0 |   
 | 1 | 0 | 1 |
 
 To:
+
 | 2 | 2 | 2 |
 |:-:|:-:|:-:|  
 | 2 | 2 | 0 |   
