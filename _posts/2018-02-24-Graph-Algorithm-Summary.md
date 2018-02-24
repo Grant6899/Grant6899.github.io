@@ -224,8 +224,102 @@ vector<Edge> Kruskal(vector<vector<int>>& map, vector<vector<int>>& paths){
 }
 ```
 
-## Prime Algorithm
+## Prim Algorithm
 
+```
+Prim(G):
+1 A = ∅
+2 pick any u ∈ V:
+3    MAKE-SET U (u)
+4 while U != V		
+5		for each (u, v) in G.E ordered by weight(u, v), where u ∈ U and v ∈ V/U increasing:    
+6       A = A ∪ {(u_min, v_min)}
+7       add v into U
+8 return A
+```
 
+### Code
+```c++
+struct Edge{
+    int src, dst, weight;
+    Edge(int _src, int _dst, int _weight) : src(_src), dst(_dst), weight(_weight) {}
+};
+
+vector<Edge> Prim(vector<vector<int>>& map, vector<vector<int>>& paths){
+    unordered_set<int> visited{3};
+    vector<Edge> res;
+    int n = map.size();
+    
+    auto com = [](Edge a, Edge b){return a.weight > b.weight;};
+
+    while(visited.size() != n){
+
+        priority_queue<Edge, vector<Edge>, decltype(com)> pq(com);
+
+        for(auto it = visited.begin(); it != visited.end(); ++it){
+            for(int i = 0; i < map.size(); ++i)
+                if( !visited.count(i) && map[*it][i] != INT_MAX)
+                    pq.push(Edge(*it, i, map[*it][i]));
+        }
+        
+        res.push_back(pq.top());
+        visited.insert(pq.top().dst);
+    }
+    return res;
+}
+```
 
 # Topological Sort
+
+## DFS Method 
+
+### Example 
+
+[LeetCode 207](https://leetcode.com/problems/course-schedule/description/)
+
+[LeetCode 210](https://leetcode.com/problems/course-schedule-ii/description/)
+
+For DFS, it will first visit a node, then one neighbor of it, then one neighbor of this neighbor... and so on.
+
+If it meets a node which was visited in the current process of DFS visit, a cycle is detected and we will return false. 
+Otherwise it will start from another unvisited node and repeat this process till all the nodes have been visited. 
+
+Note that you should make two records: one is to record all the visited nodes and the other is to record the visited nodes in the current DFS visit.
+
+The code is as follows. We use a vector<bool> visited to record all the visited nodes and another vector<bool> onpath 
+to record the visited nodes of the current DFS visit. Once the current visit is finished, we reset the onpath value of the starting node to false.
+
+
+### Code
+```c++
+class Solution {
+public:
+    vector<int> findOrder(int numCourses, vector<pair<int, int>>& prerequisites) {
+        vector<unordered_set<int>> graph = make_graph(numCourses, prerequisites);
+        vector<int> toposort;
+        vector<bool> onpath(numCourses, false), visited(numCourses, false);
+        for (int i = 0; i < numCourses; i++)
+            if (!visited[i] && dfs(graph, i, onpath, visited, toposort))
+                return {};
+        reverse(toposort.begin(), toposort.end());
+        return toposort;
+    }
+private:
+    vector<unordered_set<int>> make_graph(int numCourses, vector<pair<int, int>>& prerequisites) {
+        vector<unordered_set<int>> graph(numCourses);
+        for (auto pre : prerequisites)
+            graph[pre.second].insert(pre.first);
+        return graph;
+    }
+    bool dfs(vector<unordered_set<int>>& graph, int node, vector<bool>& onpath, vector<bool>& visited, vector<int>& toposort) { 
+        if (visited[node]) return false;
+        onpath[node] = visited[node] = true; 
+        for (int neigh : graph[node])
+            if (onpath[neigh] || dfs(graph, neigh, onpath, visited, toposort))
+                return true;
+        toposort.push_back(node);
+        return onpath[node] = false;
+    }
+};
+
+```
