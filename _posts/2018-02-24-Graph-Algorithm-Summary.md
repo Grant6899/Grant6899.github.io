@@ -311,15 +311,22 @@ private:
             graph[pre.second].insert(pre.first);
         return graph;
     }
+	
+	// check if a cycle exists in the graph
     bool dfs(vector<unordered_set<int>>& graph, int node, vector<bool>& onpath, vector<bool>& visited, vector<int>& toposort) { 
         if (visited[node]) return false;
         onpath[node] = visited[node] = true; 
         for (int neigh : graph[node])
             if (onpath[neigh] || dfs(graph, neigh, onpath, visited, toposort))
                 return true;
+				
+		// push the node whose indegree is zero
         toposort.push_back(node);
+		
+		// resume onpath
         return onpath[node] = false;
     }
 };
 
 ```
+
